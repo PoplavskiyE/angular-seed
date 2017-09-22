@@ -1,9 +1,14 @@
 'use strict';
+var options = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
 var model = {
     items: [
-        { reminder: "Купить хлеб", done: false, description: "Черный. <100руб." ,due_date : '01.07.1991'},
-        { reminder: "Заменить масло", done: false, description: "Позвонить 29 7071515, 10руб" ,due_date : '01.07.1991'},
-        { reminder: "купиь билеты в кино", done: true, description: "afisha.tut.by" ,due_date : '01.07.1991'},
+        { reminder: "Купить хлеб", description: "Черный. <100руб." ,due_date : new Date().toLocaleString("en-US", options)},
+        { reminder: "Заменить масло", description: "Позвонить 29 7071515, 10руб" ,due_date : new Date().toLocaleString("en-US", options)},
+        { reminder: "купиь билеты в кино", description: "afisha.tut.by" ,due_date : new Date().toLocaleString("en-US", options)},
     ]
 };
 var remindersApp = angular.module('myApp.reminders', ['ngRoute']);
@@ -30,6 +35,8 @@ remindersApp.controller('RemindersCtrl', function($scope) {
             alert("Please, set due date");            
             return;
         }
-        $scope.list.items.push({ reminder: title, description: description, done: false ,due_date : due_date});
+        
+        var d =due_date.toLocaleString("en-US", options);
+        $scope.list.items.push({ reminder: title, description: description,due_date : d});
     }
 });
