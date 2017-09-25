@@ -1,12 +1,4 @@
-<!doctype html>
-<html ng-app="reminders">
-
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-</head>
-
-<body ng-controller="RemindersCtrl">
+<div>
     <div class="page-header">
         <h1> My reminders </h1>
     </div>
@@ -44,17 +36,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in items track by $index">
+                <tr ng-repeat="item in items">
                     <td>{{item.reminder}}</td>
                     <td>{{item.description}}</td>
                     <td>{{item.due_date}}</td>
                     <td>
-                        <a class="btn btn-danger" data-ng-click="delete($index)"></a>
+                        <a class="btn btn-danger" data-ng-click="delete(item)"></a>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-</body>
-
-</html>
+</div>

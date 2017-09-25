@@ -10,6 +10,10 @@ remindersApp.config(['$routeProvider', function ($routeProvider) {
 }]);
 
 remindersApp.controller('RemindersCtrl', function ($scope) {
+
+    var saved = localStorage.getItem('items');
+    $scope.items = (saved != null) ? JSON.parse(saved) : [];
+
     var localSet = function () {
         try {
             localStorage.setItem('items', JSON.stringify($scope.items));
@@ -33,12 +37,12 @@ remindersApp.controller('RemindersCtrl', function ($scope) {
     }
     setMinDate();
 
-    $scope.saved = localStorage.getItem('items');
-    $scope.items = ($scope.saved != null) ? JSON.parse($scope.saved) : [];
-    $scope.delete = function (idx) {
+    $scope.delete = function (itemForDelete) {
         var rusure = confirm("Are you sure you want to remove the task from the list?");
         if (rusure) {
-            $scope.items.splice(idx, 1);
+            // $scope.items.splice(idx, 1);
+            // $scope.items.splice($scope.items.indexOf(item), 1);
+            $scope.items = $scope.items.filter(function (item) { return item.id != itemForDelete.id });
             localSet();
         }
     }
@@ -68,6 +72,7 @@ remindersApp.controller('RemindersCtrl', function ($scope) {
         var date = day + "/" + month + "/" + year;
 
         $scope.items.push({
+            id: new Date().getMilliseconds(),
             reminder: title,
             description: description,
             due_date: date
