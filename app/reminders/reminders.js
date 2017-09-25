@@ -1,9 +1,4 @@
 'use strict';
-var options = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-};
 
 var remindersApp = angular.module('myApp.reminders', ['ngRoute']);
 
@@ -16,7 +11,13 @@ remindersApp.config(['$routeProvider', function ($routeProvider) {
 
 remindersApp.controller('RemindersCtrl', function ($scope) {
     var localSet = function () {
-        localStorage.setItem('items', JSON.stringify($scope.items));
+        try {
+            localStorage.setItem('items', JSON.stringify($scope.items));
+        } catch (e) {
+            if (e == QUOTA_EXCEEDED_ERR) {
+                alert("Превышен лимит localStorage");
+            }
+        }
     }
     var setMinDate = function () {
         var date = new Date();
@@ -34,7 +35,13 @@ remindersApp.controller('RemindersCtrl', function ($scope) {
 
     $scope.saved = localStorage.getItem('items');
     $scope.items = ($scope.saved != null) ? JSON.parse($scope.saved) : [];
-
+    $scope.delete = function (idx) {
+        var rusure = confirm("Are you sure you want to remove the task from the list?");
+        if (rusure) {
+            $scope.items.splice(idx, 1);
+            localSet();
+        }
+    }
     $scope.addItem = function (title, description, due_date) {
         if (title == null || title == "") {
             alert("Please Fill Title Field");
@@ -48,13 +55,22 @@ remindersApp.controller('RemindersCtrl', function ($scope) {
             alert("Please, set due date");
             return;
         }
+        var day = due_date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var month = due_date.getMonth();
+        if (month < 10) {
+            month = "0" + month;
+        }
+        var year = due_date.getFullYear();
 
-        var d = due_date.toLocaleString("en-US", options);
+        var date = day + "/" + month + "/" + year;
 
         $scope.items.push({
             reminder: title,
             description: description,
-            due_date: d
+            due_date: date
         });
 
         // clear input field after saving
